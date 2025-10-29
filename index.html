@@ -33,6 +33,10 @@
   /* Hero */
   .hero{padding:72px 0;background:linear-gradient(90deg,var(--navy),var(--cyan));color:#fff;text-align:center}
   .hero .buttons{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px}
+  /* Trusted strip */
+  .trusted{background:#fff;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb}
+  .trusted .row{display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap;padding:12px 0}
+  .logo{height:28px;opacity:.8;filter:grayscale(1)}
   /* Sections */
   .section{padding:60px 0}
   .center{text-align:center}
@@ -54,8 +58,8 @@
   /* Tabs */
   .tabs{margin-top:10px}
   .tab-buttons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:24px}
-  .tab-buttons a,.tab-buttons button{border:1px solid #dbe3ea;background:#fff;color:#334155;padding:10px 14px;border-radius:999px;font-weight:600;cursor:pointer}
-  .tab-buttons .active{background:var(--cyan);border-color:var(--cyan);color:#fff}
+  .tab-buttons button, .tab-buttons a{border:1px solid #dbe3ea;background:#fff;color:#334155;padding:10px 14px;border-radius:999px;font-weight:600;cursor:pointer}
+  .tab-buttons button.active{background:var(--cyan);border-color:var(--cyan);color:#fff}
   .tab{display:none}
   .tab.active{display:block}
   .split-3{display:grid;gap:18px;grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -111,18 +115,31 @@
   </div>
 </header>
 
+<!-- ===== TRUSTED BY STRIP ===== -->
+<section class="trusted">
+  <div class="container">
+    <div class="row">
+      <span class="muted">Trusted by resorts & partners:</span>
+      <img class="logo" src="https://dummyimage.com/120x28/ddd/777&text=Four+Seasons" alt="Four Seasons placeholder"/>
+      <img class="logo" src="https://dummyimage.com/120x28/ddd/777&text=Hilton" alt="Hilton placeholder"/>
+      <img class="logo" src="https://dummyimage.com/120x28/ddd/777&text=Hyatt" alt="Hyatt placeholder"/>
+      <img class="logo" src="https://dummyimage.com/120x28/ddd/777&text=Jaya+Grocer" alt="Jaya Grocer placeholder"/>
+    </div>
+  </div>
+</section>
+
 <!-- ===== TABS ===== -->
 <section id="tabs" class="section" style="padding-top:30px;">
   <div class="container">
     <div class="tabs">
       <div class="tab-buttons" id="tabButtons">
-        <a href="#rates" data-tab="rates" class="active">Rates</a>
-        <a href="#converters" data-tab="converters">Converters</a>
-        <a href="#shops" data-tab="shops">Shops</a>
-        <a href="#assist" data-tab="assist">Online Assist Shopping</a>
-        <a href="#services" data-tab="services">Freight Services</a>
-        <a href="#prohibited" data-tab="prohibited">Prohibited Items</a>
-        <a href="#gform" data-tab="gform">Quick Quote (Google Form)</a>
+        <button data-tab="rates" class="active">Rates</button>
+        <button data-tab="converters">Converters</button>
+        <button data-tab="shops">Shops</button>
+        <button data-tab="assist">Online Assist Shopping</button>
+        <button data-tab="services">Freight Services</button>
+        <button data-tab="prohibited">Prohibited Items</button>
+        <button data-tab="gform">Quick Quote (Google Form)</button>
         <a href="https://tzresources.com.my/" target="_blank" rel="noopener">TZ Resources ↗</a>
       </div>
 
@@ -425,7 +442,7 @@
 const $ = sel => document.querySelector(sel);
 const $$ = sel => [...document.querySelectorAll(sel)];
 function num(v){ const n=parseFloat(v); return isNaN(n)?0:n; }
-function openTab(id){ $$('#tabButtons a').forEach(b=>{b.classList.toggle('active', b.dataset.tab===id)}); $$('.tab').forEach(t=>t.classList.remove('active')); document.getElementById(id).classList.add('active'); document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'}); }
+function openTab(id){ $$('#tabButtons button').forEach(b=>{b.classList.toggle('active', b.dataset.tab===id)}); $$('.tab').forEach(t=>t.classList.remove('active')); document.getElementById(id).classList.add('active'); document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'}); }
 
 /* ===== Cut-off countdown (weekly Fri 17:00 MYT) ===== */
 function nextCutoff(){
@@ -434,11 +451,10 @@ function nextCutoff(){
   const target = new Date(now);
   target.setHours(17,0,0,0); // 17:00
   const daysToFri = (5 - day + 7) % 7; // days until Friday
-  const base = new Date(now);
-  base.setDate(now.getDate() + daysToFri);
-  base.setHours(17,0,0,0);
-  if (day===5 && now>base) base.setDate(base.getDate()+7);
-  return base;
+  target.setDate(now.getDate() + (day>5 || (day===5 && now>target) ? (7 - ((day-5+7)%7)) : daysToFri));
+  if(day<5) target.setDate(now.getDate()+daysToFri);
+  if(day===5 && now>target) target.setDate(now.getDate()+7);
+  return target;
 }
 function tickCut(){
   const t = nextCutoff();
@@ -450,15 +466,13 @@ function tickCut(){
 }
 setInterval(tickCut,1000); tickCut();
 
-/* ===== Tabs (all clickable) ===== */
+/* ===== Tabs ===== */
 (function(){
-  const buttons=$$('#tabButtons a');
+  const buttons=document.querySelectorAll('#tabButtons button');
   const tabIds=['rates','converters','shops','assist','services','prohibited','gform'];
   const tabs=tabIds.map(id=>document.getElementById(id));
   buttons.forEach(btn=>{
-    btn.addEventListener('click',(e)=>{
-      if(!btn.dataset.tab) return; // external link (TZ Resources)
-      e.preventDefault();
+    btn.addEventListener('click',()=>{
       buttons.forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       tabs.forEach(t=>t.classList.remove('active'));
@@ -606,7 +620,8 @@ function renderShopCards(list){
   grid.querySelectorAll('button[data-add]').forEach(b=>{
     b.onclick=()=>{
       const ta = $('#fLinks');
-      ta.value = (ta.value?ta.value+'\n':'') + b.dataset.add;
+      ta.value = (ta.value?ta.value+'
+':'') + b.dataset.add;
       dataLayer.push({event:'shop_add_to_request'});
       b.textContent='Added ✓'; setTimeout(()=>b.textContent='Add to Request',900);
     }
@@ -682,7 +697,9 @@ function updateAuthUI(user){
   if(user){
     openAuthBtn.textContent = user.displayName ? `Hi, ${user.displayName.split(' ')[0]}` : 'Account';
     openAuthBtn.onclick = ()=>{
-      if(confirm(`${user.email || 'You'} are signed in.\n\nSign out?`)){ auth.signOut(); }
+      if(confirm(`${user.email || 'You'} are signed in.
+
+Sign out?`)){ auth.signOut(); }
     };
   }else{
     openAuthBtn.textContent = 'Sign in';
@@ -725,7 +742,8 @@ function saveDraft(){
 function renderReq(){
   const ul = $('#reqList'); if(!ul) return;
   const all = JSON.parse(localStorage.getItem('mf_req')||'[]');
-  ul.innerHTML = all.slice(0,5).map(x=> `<li>${new Date(x.t).toLocaleString()} — ${x.m3} m³<br><small class="muted">${(x.links||'').split('\n')[0]||'No links'}</small></li>`).join('');
+  ul.innerHTML = all.slice(0,5).map(x=> `<li>${new Date(x.t).toLocaleString()} — ${x.m3} m³<br><small class="muted">${(x.links||'').split('
+')[0]||'No links'}</small></li>`).join('');
 }
 renderReq();
 
@@ -738,7 +756,7 @@ function wizEval(){
   if(d) msg='High value — customs declaration required. Please check with us.';
   $('#wizOut').textContent=msg;
 }
-['w1','w2','w3','w4'].forEach(id=>document.getElementById(id).addEventListener('change',wizEval));
+['#w1','#w2','#w3','#w4'].forEach(id=>document.getElementById(id.substring(1)).addEventListener('change',wizEval));
 wizEval();
 $('#wizWA').href = `https://wa.me/60123456789?text=${encodeURIComponent('Can I ship this item? [photos/description attached]')}`;
 
