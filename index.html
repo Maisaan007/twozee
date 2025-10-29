@@ -18,6 +18,10 @@
   h1,h2,h3{margin:0 0 .5rem}
   a{text-decoration:none;color:inherit}
   .container{max-width:1200px;margin:0 auto;padding:0 18px}
+  /* Top slim cut-off bar */
+  .cutoff{position:sticky;top:0;z-index:60;background:#082238;color:#e6f3ff;border-bottom:1px solid rgba(255,255,255,.08)}
+  .cutoff .wrap{display:flex;gap:10px;justify-content:center;align-items:center;padding:6px 10px;font-weight:700}
+  .cutoff .pill{background:#0FB9D7; color:#fff; padding:4px 8px; border-radius:999px; font-size:.8rem}
   /* Buttons */
   .btn{display:inline-flex;align-items:center;gap:.5rem;border:0;border-radius:12px;padding:12px 18px;font-weight:700;cursor:pointer;transition:.2s}
   .btn-primary{background:var(--gold);color:#111}
@@ -27,8 +31,12 @@
   .btn-ghost{background:#fff;border:1px solid #e5e7eb}
   .badge{display:inline-block;background:#fff3cd;color:#7c5a00;border:1px solid #ffe69c;border-radius:10px;padding:4px 8px;font-size:.75rem}
   /* Hero */
-  .hero{padding:84px 0;background:linear-gradient(90deg,var(--navy),var(--cyan));color:#fff;text-align:center}
+  .hero{padding:72px 0;background:linear-gradient(90deg,var(--navy),var(--cyan));color:#fff;text-align:center}
   .hero .buttons{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px}
+  /* Trusted strip */
+  .trusted{background:#fff;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb}
+  .trusted .row{display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap;padding:12px 0}
+  .logo{height:28px;opacity:.8;filter:grayscale(1)}
   /* Sections */
   .section{padding:60px 0}
   .center{text-align:center}
@@ -50,7 +58,7 @@
   /* Tabs */
   .tabs{margin-top:10px}
   .tab-buttons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:24px}
-  .tab-buttons button{border:1px solid #dbe3ea;background:#fff;color:#334155;padding:10px 14px;border-radius:999px;font-weight:600;cursor:pointer}
+  .tab-buttons button, .tab-buttons a{border:1px solid #dbe3ea;background:#fff;color:#334155;padding:10px 14px;border-radius:999px;font-weight:600;cursor:pointer}
   .tab-buttons button.active{background:var(--cyan);border-color:var(--cyan);color:#fff}
   .tab{display:none}
   .tab.active{display:block}
@@ -61,7 +69,7 @@
   .cta{background:var(--navy);color:#fff;padding:60px 0;text-align:center}
   .footer{background:#0b1220;color:#cbd5e1;text-align:center;padding:26px 12px;font-size:.9rem}
   /* Modal */
-  .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+  .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:90}
   .modal{width:min(880px,100%);background:#fff;border-radius:16px;box-shadow:0 25px 60px rgba(0,0,0,.25);overflow:hidden}
   .modal header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#f8fafc;border-bottom:1px solid #e5e7eb}
   .modal .content{padding:16px}
@@ -75,10 +83,23 @@
   .shop-card .actions{display:flex;gap:8px;flex-wrap:wrap}
   .shop-card .btn{padding:8px 12px;border-radius:10px}
   /* Mini Chat launcher (optional helper) */
-  .chat-launcher{position:fixed;right:16px;bottom:16px;z-index:60;background:#0FB9D7;color:#fff;border:0;border-radius:999px;padding:12px 14px;font-weight:800;box-shadow:0 12px 28px rgba(0,0,0,.2);cursor:pointer}
+  .chat-launcher{position:fixed;right:16px;bottom:16px;z-index:95;background:#0FB9D7;color:#fff;border:0;border-radius:999px;padding:12px 14px;font-weight:800;box-shadow:0 12px 28px rgba(0,0,0,.2);cursor:pointer}
+  /* Sticky mini quote */
+  .mini-quote{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:94;background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 18px 36px rgba(0,0,0,.15);display:flex;gap:10px;align-items:center;padding:10px 12px}
+  .mini-quote .vals{display:flex;gap:12px;font-weight:800}
+  .mini-quote .btn{padding:8px 12px}
 </style>
 </head>
 <body>
+
+<!-- ===== CUT-OFF TIMER BAR ===== -->
+<div class="cutoff">
+  <div class="container wrap">
+    <span>Next Air Dispatch:</span>
+    <span id="cutCountdown" class="pill">calculating…</span>
+    <span class="muted" style="font-weight:600">(every Fri 17:00 MYT)</span>
+  </div>
+</div>
 
 <!-- ===== HERO ===== -->
 <header class="hero">
@@ -94,6 +115,19 @@
   </div>
 </header>
 
+<!-- ===== TRUSTED BY STRIP ===== -->
+<section class="trusted">
+  <div class="container">
+    <div class="row">
+      <span class="muted">Trusted by resorts & partners:</span>
+      <img class="logo" src="https://dummyimage.com/120x28/ddd/777&text=Four+Seasons" alt="Four Seasons placeholder"/>
+      <img class="logo" src="https://dummyimage.com/120x28/ddd/777&text=Hilton" alt="Hilton placeholder"/>
+      <img class="logo" src="https://dummyimage.com/120x28/ddd/777&text=Hyatt" alt="Hyatt placeholder"/>
+      <img class="logo" src="https://dummyimage.com/120x28/ddd/777&text=Jaya+Grocer" alt="Jaya Grocer placeholder"/>
+    </div>
+  </div>
+</section>
+
 <!-- ===== TABS ===== -->
 <section id="tabs" class="section" style="padding-top:30px;">
   <div class="container">
@@ -105,6 +139,8 @@
         <button data-tab="assist">Online Assist Shopping</button>
         <button data-tab="services">Freight Services</button>
         <button data-tab="prohibited">Prohibited Items</button>
+        <button data-tab="gform">Quick Quote (Google Form)</button>
+        <a href="https://tzresources.com.my/" target="_blank" rel="noopener">TZ Resources ↗</a>
       </div>
 
       <!-- ===== RATES ===== -->
@@ -122,7 +158,7 @@
             <div class="est"><div class="muted">Estimate:</div><div id="airOut" class="value">USD 42.50</div></div>
           </div>
 
-          <!-- Sea (single) -->
+          <!-- Sea -->
           <div class="card">
             <h3>🚢 Sea Freight (by volume)</h3>
             <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:10px;">
@@ -238,7 +274,7 @@
         </div>
       </div>
 
-      <!-- ===== PROHIBITED ITEMS ===== -->
+      <!-- ===== PROHIBITED ITEMS + WIZARD ===== -->
       <div id="prohibited" class="tab">
         <h2 class="center" style="font-size:1.8rem;margin-bottom:18px;">Prohibited & Restricted Items</h2>
         <div class="cards grid">
@@ -247,7 +283,42 @@
           <div class="card"><h3>❌ Restricted Foods</h3><p class="muted">Certain meats, liquids in excess, non-Halal products (subject to local law).</p></div>
           <div class="card"><h3>❌ Others</h3><p class="muted">Cash, precious stones, illegal items as per Malaysia/Maldives law.</p></div>
         </div>
-        <p class="muted center tight">Ask us for the latest list before shipping.</p>
+        <div class="card" style="margin-top:16px;">
+          <h3>🧭 Quick Check Wizard</h3>
+          <p class="muted">Answer a few questions to see if your item may be restricted.</p>
+          <div id="wiz" class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
+            <div>
+              <label>Is it liquid, aerosol, or gel?</label>
+              <select id="w1"><option>No</option><option>Yes</option></select>
+            </div>
+            <div>
+              <label>Contains battery or magnet?</label>
+              <select id="w2"><option>No</option><option>Yes</option></select>
+            </div>
+            <div>
+              <label>Is it perishable (fresh/frozen)?</label>
+              <select id="w3"><option>No</option><option>Yes</option></select>
+            </div>
+            <div>
+              <label>High value (&gt; MYR 2500)?</label>
+              <select id="w4"><option>No</option><option>Yes</option></select>
+            </div>
+          </div>
+          <div class="est"><div class="muted">Result:</div><div id="wizOut" class="value">Looks OK — proceed to quote.</div></div>
+          <div style="text-align:right;margin-top:10px;"><a id="wizWA" class="btn btn-primary" href="#">Ask on WhatsApp</a></div>
+        </div>
+      </div>
+
+      <!-- ===== GOOGLE FORM (Standalone tab) ===== -->
+      <div id="gform" class="tab">
+        <h2 class="center" style="font-size:1.8rem;margin-bottom:18px;">Quick Quote — Google Form</h2>
+        <div class="card" style="max-width:900px;margin:0 auto;">
+          <div style="display:flex;justify-content:flex-end;gap:8px;margin:0 0 10px;">
+            <a href="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform" target="_blank" rel="noopener" class="btn btn-ghost">Open full form ↗</a>
+          </div>
+          <iframe title="MyFoshi Google Form" src="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?embedded=true" width="100%" height="760">Loading…</iframe>
+        </div>
+        <p class="muted center" style="margin-top:8px;">Replace <code>YOUR_FORM_ID</code> with your actual Google Form ID (Send → Embed &lt;&gt;).</p>
       </div>
 
     </div>
@@ -258,14 +329,31 @@
 <section id="track" class="cta">
   <div class="container">
     <h2 style="font-size:2rem;margin-bottom:6px;">Track Your Shipment</h2>
-    <p class="muted" style="color:#dbeafe;margin-bottom:14px;">Click below to track your parcel in real time.</p>
-    <a href="https://example.com/track" class="btn btn-primary">Go to Tracking Page</a>
+    <p class="muted" style="color:#dbeafe;margin-bottom:14px;">Enter your tracking ID.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;">
+      <input id="trkId" type="text" placeholder="Enter AWB/BL/Order ID" style="min-width:260px;max-width:360px;">
+      <button id="trkBtn" class="btn btn-primary">Track</button>
+    </div>
+    <a href="https://example.com/track" class="btn btn-outline">Go to Tracking Page</a>
   </div>
 </section>
 
 <footer class="footer">
   © 2025 MyFoshi Sdn. Bhd. · Malaysia ⇄ Maldives Logistics Partner
+  <div style="margin-top:8px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+    <a class="btn btn-ghost" href="#gform" onclick="openTab('gform');return false;">Get Quote</a>
+    <a class="btn btn-ghost" href="#assist" onclick="openTab('assist');return false;">Assist Shopping</a>
+  </div>
 </footer>
+
+<!-- ===== STICKY MINI QUOTE CARD ===== -->
+<div id="miniQuote" class="mini-quote" style="display:none">
+  <div class="vals">
+    <span>✈️ <span id="miniAir">USD 0.00</span></span>
+    <span>🚢 <span id="miniSea">USD 0.00</span></span>
+  </div>
+  <button id="miniWA" class="btn btn-primary">Send WhatsApp</button>
+</div>
 
 <!-- ===== ASSIST SHOPPING MODAL (Google Form embedded + native form) ===== -->
 <div id="shoppingModal" class="modal-backdrop">
@@ -352,12 +440,36 @@
 <script>
 /* ===== Helpers ===== */
 const $ = sel => document.querySelector(sel);
+const $$ = sel => [...document.querySelectorAll(sel)];
 function num(v){ const n=parseFloat(v); return isNaN(n)?0:n; }
+function openTab(id){ $$('#tabButtons button').forEach(b=>{b.classList.toggle('active', b.dataset.tab===id)}); $$('.tab').forEach(t=>t.classList.remove('active')); document.getElementById(id).classList.add('active'); document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'}); }
+
+/* ===== Cut-off countdown (weekly Fri 17:00 MYT) ===== */
+function nextCutoff(){
+  const now = new Date();
+  const day = now.getDay(); // 0 Sun ... 5 Fri
+  const target = new Date(now);
+  target.setHours(17,0,0,0); // 17:00
+  const daysToFri = (5 - day + 7) % 7; // days until Friday
+  target.setDate(now.getDate() + (day>5 || (day===5 && now>target) ? (7 - ((day-5+7)%7)) : daysToFri));
+  if(day<5) target.setDate(now.getDate()+daysToFri);
+  if(day===5 && now>target) target.setDate(now.getDate()+7);
+  return target;
+}
+function tickCut(){
+  const t = nextCutoff();
+  const d = t - new Date();
+  if(d<=0){ document.getElementById('cutCountdown').textContent = 'Loading…'; setTimeout(tickCut,1000); return; }
+  const h = Math.floor(d/36e5), m = Math.floor((d%36e5)/6e4), s=Math.floor((d%6e4)/1e3);
+  const days = Math.floor(h/24), hrs = h%24;
+  document.getElementById('cutCountdown').textContent = `${days}d ${hrs}h ${m}m ${s}s`;
+}
+setInterval(tickCut,1000); tickCut();
 
 /* ===== Tabs ===== */
 (function(){
   const buttons=document.querySelectorAll('#tabButtons button');
-  const tabIds=['rates','converters','shops','assist','services','prohibited'];
+  const tabIds=['rates','converters','shops','assist','services','prohibited','gform'];
   const tabs=tabIds.map(id=>document.getElementById(id));
   buttons.forEach(btn=>{
     btn.addEventListener('click',()=>{
@@ -366,6 +478,7 @@ function num(v){ const n=parseFloat(v); return isNaN(n)?0:n; }
       tabs.forEach(t=>t.classList.remove('active'));
       document.getElementById(btn.dataset.tab).classList.add('active');
       document.getElementById(btn.dataset.tab).scrollIntoView({behavior:'smooth',block:'start'});
+      if(btn.dataset.tab==='gform'){ dataLayer.push({event:'quote_opened'}); }
     });
   });
 })();
@@ -377,6 +490,7 @@ function calcAir(){
   const airPerKg=num($('#airPerKg').value);
   const est = Math.max(0, airBase + airPerKg*airKg);
   $('#airOut').textContent = 'USD ' + est.toFixed(2);
+  $('#miniAir').textContent = 'USD ' + est.toFixed(2);
 }
 ['#airKg','#airBase','#airPerKg'].forEach(s=>$(s).addEventListener('input',calcAir)); calcAir();
 
@@ -387,10 +501,18 @@ function calcSea(){
   const est = Math.max(0, rate * m3);
   $('#m3Out').textContent = m3.toFixed(3);
   $('#seaOut').textContent = 'USD ' + est.toFixed(2);
+  $('#miniSea').textContent = 'USD ' + est.toFixed(2);
 }
 ['#len','#wid','#hei','#rateM3'].forEach(s=>$(s).addEventListener('input',calcSea));
 $('#reset').addEventListener('click',()=>{ $('#len').value=50; $('#wid').value=40; $('#hei').value=30; $('#rateM3').value=495; calcSea();});
 calcSea();
+
+/* ===== Show sticky quote only on Rates tab ===== */
+function toggleMiniQuote(){
+  const ratesActive = document.getElementById('rates').classList.contains('active');
+  document.getElementById('miniQuote').style.display = ratesActive? 'flex':'none';
+}
+setInterval(toggleMiniQuote,400);
 
 /* ===== Multi-box ===== */
 const tbody = document.querySelector('#boxes tbody');
@@ -423,8 +545,8 @@ $('#addBox').onclick=()=>{ row(); recalc(); };
 row(); recalc();
 
 /* ===== WhatsApp quick quote (MOCK NUMBER) ===== */
-$('#waQuote').onclick=()=>{
-  const text = encodeURIComponent(
+function composeWA(){
+  return encodeURIComponent(
 `Hi MyFoshi, can I get a quote?
 Boxes CBM: ${$('#sumM3')?.textContent} m³
 Actual weight: ${$('#sumKg')?.textContent} kg
@@ -432,8 +554,9 @@ Air volumetric: ${$('#sumVolKg')?.textContent} kg
 Links:
 ${$('#fLinks')?.value||'-'}
 `);
-  location.href = `https://wa.me/60123456789?text=${text}`;
-};
+}
+$('#waQuote').onclick=()=>{ dataLayer.push({event:'wa_click'}); location.href = `https://wa.me/60123456789?text=${composeWA()}`; };
+$('#miniWA').onclick=()=>{ dataLayer.push({event:'wa_click'}); location.href = `https://wa.me/60123456789?text=${composeWA()}`; };
 
 /* ===== Converters ===== */
 function recalcConv(){
@@ -497,7 +620,9 @@ function renderShopCards(list){
   grid.querySelectorAll('button[data-add]').forEach(b=>{
     b.onclick=()=>{
       const ta = $('#fLinks');
-      ta.value = (ta.value?ta.value+'\n':'') + b.dataset.add;
+      ta.value = (ta.value?ta.value+'
+':'') + b.dataset.add;
+      dataLayer.push({event:'shop_add_to_request'});
       b.textContent='Added ✓'; setTimeout(()=>b.textContent='Add to Request',900);
     }
   });
@@ -572,7 +697,9 @@ function updateAuthUI(user){
   if(user){
     openAuthBtn.textContent = user.displayName ? `Hi, ${user.displayName.split(' ')[0]}` : 'Account';
     openAuthBtn.onclick = ()=>{
-      if(confirm(`${user.email || 'You'} are signed in.\n\nSign out?`)){ auth.signOut(); }
+      if(confirm(`${user.email || 'You'} are signed in.
+
+Sign out?`)){ auth.signOut(); }
     };
   }else{
     openAuthBtn.textContent = 'Sign in';
@@ -584,6 +711,7 @@ auth.onAuthStateChanged(updateAuthUI);
 // Gate Assist modal
 openAssistBtn.addEventListener('click',()=>{
   if(!currentUser){ showAuth(); return; }
+  dataLayer.push({event:'assist_opened'});
   modal.classList.add('show');
 });
 closeAssistBtn.addEventListener('click',()=> modal.classList.remove('show'));
@@ -594,6 +722,7 @@ $('#assistForm').addEventListener('submit',e=>{
   e.preventDefault();
   if(!currentUser){ showAuth(); return; }
   saveDraft();
+  dataLayer.push({event:'assist_submit'});
   alert('Thank you! Your Assist Shopping request has been received.');
   modal.classList.remove('show');
   ['#fName','#fPhone','#fEmail','#fLinks','#fBudget'].forEach(id=>$(id).value='');
@@ -613,13 +742,34 @@ function saveDraft(){
 function renderReq(){
   const ul = $('#reqList'); if(!ul) return;
   const all = JSON.parse(localStorage.getItem('mf_req')||'[]');
-  ul.innerHTML = all.slice(0,5).map(x=> `<li>${new Date(x.t).toLocaleString()} — ${x.m3} m³<br><small class="muted">${(x.links||'').split('\n')[0]||'No links'}</small></li>`).join('');
+  ul.innerHTML = all.slice(0,5).map(x=> `<li>${new Date(x.t).toLocaleString()} — ${x.m3} m³<br><small class="muted">${(x.links||'').split('
+')[0]||'No links'}</small></li>`).join('');
 }
 renderReq();
 
+/* ===== Prohibited Wizard logic ===== */
+function wizEval(){
+  const a=$('#w1').value==='Yes', b=$('#w2').value==='Yes', c=$('#w3').value==='Yes', d=$('#w4').value==='Yes';
+  let msg='Looks OK — proceed to quote.';
+  if(a||b) msg='Might be restricted — special packing or airline restrictions apply.';
+  if(c) msg='Perishables require cold chain and special handling.';
+  if(d) msg='High value — customs declaration required. Please check with us.';
+  $('#wizOut').textContent=msg;
+}
+['#w1','#w2','#w3','#w4'].forEach(id=>document.getElementById(id.substring(1)).addEventListener('change',wizEval));
+wizEval();
+$('#wizWA').href = `https://wa.me/=${encodeURIComponent('Can I ship this item? [photos/description attached]')}`;
+
+/* ===== Tracking input ===== */
+$('#trkBtn').onclick=()=>{
+  const id = ($('#trkId').value||'').trim();
+  if(!id){ alert('Please enter a tracking ID'); return; }
+  // TODO: replace with your tracker URL pattern
+  window.open('https://example.com/track?id='+encodeURIComponent(id),'_blank');
+};
+
 /* ===== PWA (inline manifest + generated service worker) ===== */
 (function makePWA(){
-  // manifest
   const manifest = {
     name:"MyFoshi", short_name:"MyFoshi",
     start_url:"./myfoshi.html", display:"standalone",
@@ -628,17 +778,10 @@ renderReq();
   const mBlob = new Blob([JSON.stringify(manifest)],{type:'application/json'});
   const mUrl = URL.createObjectURL(mBlob);
   const link = document.createElement('link'); link.rel='manifest'; link.href=mUrl; document.head.appendChild(link);
-
-  // sw (cache this page)
   const swCode = `
     const CACHE='myfoshi-v1';
-    self.addEventListener('install',e=>{
-      e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./myfoshi.html'])));
-    });
-    self.addEventListener('fetch',e=>{
-      e.respondWith(caches.match(e.request).then(r=> r || fetch(e.request)));
-    });
-  `;
+    self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./myfoshi.html'])))});
+    self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=> r || fetch(e.request)))})`;
   if('serviceWorker' in navigator){
     const swUrl = URL.createObjectURL(new Blob([swCode],{type:'text/javascript'}));
     navigator.serviceWorker.register(swUrl).catch(()=>{});
@@ -647,7 +790,7 @@ renderReq();
 
 /* ===== SEO JSON-LD ===== */
 (function(){
-  const ld = {
+  const parcel={
     "@context":"https://schema.org",
     "@type":"ParcelDelivery",
     "name":"MyFoshi Malaysia → Maldives Shipping",
@@ -660,8 +803,24 @@ renderReq();
       {"@type":"Offer","name":"Customs Clearance & Delivery"}
     ]}
   };
-  const s = document.createElement('script'); s.type='application/ld+json'; s.textContent=JSON.stringify(ld); document.head.appendChild(s);
+  const crumbs={
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"Home","item":"https://tzresources.com.my/"},
+      {"@type":"ListItem","position":2,"name":"MyFoshi","item":"https://tzresources.com.my/myfoshi"}
+    ]
+  };
+  const s1=document.createElement('script'); s1.type='application/ld+json'; s1.textContent=JSON.stringify(parcel);
+  const s2=document.createElement('script'); s2.type='application/ld+json'; s2.textContent=JSON.stringify(crumbs);
+  document.head.appendChild(s1); document.head.appendChild(s2);
 })();
+
+/* ===== GA4/GTM hooks (optional) ===== */
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);} // GA style helper
+
+dataLayer.push({event:'calc_use'});
 </script>
 
 <!-- ===== Tawk.to live chat (MOCK ID) ===== -->
@@ -675,6 +834,17 @@ var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
   s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
+
+<!-- Optional: GTM container (replace GTM-XXXX) -->
+<!--
+<script>
+ (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+ 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+ })(window,document,'script','dataLayer','GTM-XXXX');
+</script>
+-->
 
 </body>
 </html>
