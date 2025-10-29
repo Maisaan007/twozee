@@ -82,6 +82,8 @@
     <div class="buttons">
       <a href="#tabs" class="btn btn-primary">Get Quote</a>
       <a href="#track" class="btn btn-outline">Track Parcel</a>
+      <!-- Sign in button -->
+      <button id="openAuth" class="btn btn-ghost" style="background:#fff;color:#0B2C4A">Sign in</button>
     </div>
   </div>
 </header>
@@ -111,7 +113,6 @@
             </div>
             <div class="est"><div class="muted">Estimate:</div><div id="airOut" class="value">USD 42.50</div></div>
           </div>
-
           <!-- Sea -->
           <div class="card">
             <h3>🚢 Sea Freight (by volume)</h3>
@@ -146,10 +147,8 @@
         <div style="max-width:640px;margin:0 auto 16px;">
           <input id="shopSearch" type="search" placeholder="Search shops (e.g., Ikea, Jaya Grocer, 99 Speedmart)"/>
         </div>
-        <div id="shopGrid" class="shop-grid">
-          <!-- cards injected by JS for easy search/filter -->
-        </div>
-        <p class="center muted tight">Tip: Click “Add to Request” to send a shop link into the Assist Shopping form automatically.</p>
+        <div id="shopGrid" class="shop-grid"></div>
+        <p class="center muted tight">Tip: Click “Add to Request” to push a shop link into the Assist form automatically.</p>
       </div>
 
       <!-- ONLINE ASSIST SHOPPING TAB -->
@@ -181,7 +180,7 @@
   © 2025 MyFoshi Sdn. Bhd. · Malaysia ⇄ Maldives Logistics Partner
 </footer>
 
-<!-- ASSIST SHOPPING MODAL -->
+<!-- ASSIST SHOPPING MODAL (Google Form embedded + native form) -->
 <div id="shoppingModal" class="modal-backdrop">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shoppingTitle">
     <header>
@@ -189,7 +188,7 @@
       <button id="closeShoppingForm" class="btn btn-ghost">✕</button>
     </header>
     <div class="content">
-      <!-- Native form (keep) -->
+      <!-- Native form (keep or remove if you only want Google Form) -->
       <form id="assistForm" class="grid" style="grid-template-columns:1fr 1fr;gap:12px;">
         <div><label>Your Name</label><input id="fName" type="text" required placeholder="Full name"></div>
         <div><label>WhatsApp / Phone</label><input id="fPhone" type="tel" required placeholder="+60 ..."></div>
@@ -217,17 +216,51 @@
 
       <p class="muted center" style="margin:10px 0">— or —</p>
 
-      <!-- Optional: replace this with your Google Form embed -->
+      <!-- Google Form: Embed + "Open full form" -->
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin:8px 0 10px;">
+        <a href="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform"
+           target="_blank" rel="noopener"
+           class="btn btn-ghost">Open full form ↗</a>
+      </div>
       <div class="card" style="padding:10px;">
         <iframe
           title="Assist Shopping Google Form"
-          src="https://docs.google.com/forms/d/e/1FAIpQLSe_example/viewform?embedded=true"
+          src="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?embedded=true"
           width="100%" height="520">Loading…</iframe>
       </div>
-      <p class="muted" style="font-size:.8rem;margin-top:6px;">Replace the iframe URL with your own Google Form (Send → Embed &lt;&gt;). Remove the native form above if you only want Google Form.</p>
+      <p class="muted" style="font-size:.8rem;margin-top:6px;">Replace both URLs with your Google Form. If you only want the Google Form, remove the native form above.</p>
     </div>
   </div>
 </div>
+
+<!-- AUTH MODAL (Firebase Auth: Google + Email/Password) -->
+<div id="authModal" class="modal-backdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <header>
+      <h3 id="authTitle">Sign in</h3>
+      <button id="closeAuth" class="btn btn-ghost">✕</button>
+    </header>
+    <div class="content">
+      <div class="grid" style="grid-template-columns:1fr;gap:12px;max-width:520px;margin:auto;">
+        <button id="googleSignIn" class="btn btn-primary" style="justify-content:center;">Continue with Google</button>
+        <div class="muted center" style="margin:6px 0">— or —</div>
+        <form id="emailAuthForm" class="grid" style="grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="grid-column:1/-1"><label>Email</label><input id="authEmail" type="email" required placeholder="you@example.com"></div>
+          <div style="grid-column:1/-1"><label>Password</label><input id="authPass" type="password" required placeholder="••••••••"></div>
+          <div style="grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end;">
+            <button id="emailSignInBtn" type="button" class="btn btn-ghost">Sign in</button>
+            <button id="emailSignUpBtn" type="button" class="btn btn-primary">Create account</button>
+          </div>
+        </form>
+        <p id="authMsg" class="muted center" style="min-height:20px;"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
 <script>
 /* ===== Helpers ===== */
@@ -302,41 +335,119 @@ function renderShops(list){
       </div>`;
     grid.appendChild(card);
   });
-  // bind add handlers
   grid.querySelectorAll('button[data-add]').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const url = btn.getAttribute('data-add');
       const ta = $('#fLinks');
       ta.value = (ta.value ? ta.value + '\n' : '') + url;
-      // show toast-ish
       btn.textContent='Added ✓';
       setTimeout(()=>btn.textContent='Add to Request',900);
     });
   });
 }
-
 renderShops(shops);
-
 $('#shopSearch').addEventListener('input',e=>{
   const q = e.target.value.trim().toLowerCase();
   renderShops(shops.filter(s => s.name.toLowerCase().includes(q) || s.url.toLowerCase().includes(q)));
 });
 
-/* ===== Modal (Assist Shopping) ===== */
+/* ===== Assist Shopping Modal (gated by sign-in) ===== */
 const modal = $('#shoppingModal');
-$('#openShoppingForm').addEventListener('click',()=> modal.classList.add('show'));
-$('#closeShoppingForm').addEventListener('click',()=> modal.classList.remove('show'));
+const openAssistBtn = $('#openShoppingForm');
+const closeAssistBtn = $('#closeShoppingForm');
+
+/* ===== Firebase Auth Setup ===== */
+const firebaseConfig = {
+  apiKey: "YOUR_FIREBASE_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  appId: "YOUR_APP_ID"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+const authModal = $('#authModal');
+const openAuthBtn = $('#openAuth');
+const closeAuthBtn = $('#closeAuth');
+
+function showAuth(){ authModal.classList.add('show'); }
+function hideAuth(){ authModal.classList.remove('show'); }
+
+openAuthBtn.addEventListener('click', showAuth);
+closeAuthBtn.addEventListener('click', hideAuth);
+authModal.addEventListener('click',e=>{ if(e.target===authModal) hideAuth(); });
+
+// Google sign-in
+$('#googleSignIn').addEventListener('click', async ()=>{
+  try{
+    const provider = new firebase.auth.GoogleAuthProvider();
+    await auth.signInWithPopup(provider);
+    hideAuth();
+  }catch(err){ $('#authMsg').textContent = err.message; }
+});
+
+// Email sign in / sign up
+async function emailSignIn(){
+  const email = $('#authEmail').value.trim();
+  const pass = $('#authPass').value;
+  try{ await auth.signInWithEmailAndPassword(email, pass); hideAuth(); }
+  catch(err){ $('#authMsg').textContent = err.message; }
+}
+async function emailSignUp(){
+  const email = $('#authEmail').value.trim();
+  const pass = $('#authPass').value;
+  try{ await auth.createUserWithEmailAndPassword(email, pass); hideAuth(); }
+  catch(err){ $('#authMsg').textContent = err.message; }
+}
+$('#emailSignInBtn').addEventListener('click', emailSignIn);
+$('#emailSignUpBtn').addEventListener('click', emailSignUp);
+
+let currentUser = null;
+function updateAuthUI(user){
+  currentUser = user;
+  if(user){
+    openAuthBtn.textContent = user.displayName ? `Hi, ${user.displayName.split(' ')[0]}` : 'Account';
+    openAuthBtn.onclick = ()=>{
+      if(confirm(`${user.email || 'You'} are signed in.\n\nSign out?`)){ auth.signOut(); }
+    };
+  }else{
+    openAuthBtn.textContent = 'Sign in';
+    openAuthBtn.onclick = showAuth;
+  }
+}
+auth.onAuthStateChanged(updateAuthUI);
+
+// Gate Assist modal
+openAssistBtn.addEventListener('click',()=>{
+  if(!currentUser){ showAuth(); return; }
+  modal.classList.add('show');
+});
+closeAssistBtn.addEventListener('click',()=> modal.classList.remove('show'));
 modal.addEventListener('click',e=>{ if(e.target===modal) modal.classList.remove('show'); });
 
-// Simple submit handler (replace with webhook/EmailJS/etc.)
+// Native Assist form submit (replace with webhook/EmailJS/Sheets as needed)
 $('#assistForm').addEventListener('submit',e=>{
   e.preventDefault();
+  if(!currentUser){ showAuth(); return; }
   alert('Thank you! Your Assist Shopping request has been received.');
   modal.classList.remove('show');
-  // Optional: clear fields
   ['#fName','#fPhone','#fEmail','#fLinks','#fBudget'].forEach(id=>$(id).value='');
   $('#fPref').selectedIndex=0; $('#fUrgency').selectedIndex=0;
 });
 </script>
+
+<!-- Tawk.to live chat (Option 1) -->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true; 
+  /* Replace with your property ID and widget: https://dashboard.tawk.to */
+  s1.src='https://embed.tawk.to/YOUR_TAWK_PROPERTY_ID/DEFAULT';
+  s1.charset='UTF-8'; s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+
 </body>
 </html>
