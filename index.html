@@ -88,7 +88,7 @@
   .mini-quote .vals{display:flex;gap:12px;font-weight:800}
   .mini-quote .btn{padding:8px 12px}
 
-  /* Floating action buttons (WhatsApp + Assist) */
+  /* Floating actions */
   .fab-wrap{position:fixed;right:16px;bottom:16px;z-index:96;display:flex;flex-direction:column;gap:10px}
   .fab{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:12px 14px;font-weight:800;box-shadow:0 12px 24px rgba(0,0,0,.2);cursor:pointer;border:0}
   .fab-wa{background:#25d366;color:#0b2c0b}
@@ -115,8 +115,8 @@
       <a href="#tabs" class="btn btn-primary">Get Quote</a>
       <a href="#track" class="btn btn-outline">Track Parcel</a>
       <button id="openAuth" class="btn btn-ghost" style="background:#fff;color:#0B2C4A">Sign in</button>
-      <!-- New: hero WhatsApp Ask Us -->
-      <a id="heroWA" class="btn btn-ghost" style="background:#25d366;color:#0b2c0b">WhatsApp — Ask us</a>
+      <!-- Kept for UI, no link/number -->
+      <button id="heroWA" class="btn btn-ghost" style="background:#25d366;color:#0b2c0b">WhatsApp — Ask us</button>
     </div>
   </div>
 </header>
@@ -177,7 +177,8 @@
           <div class="est"><div class="muted">Total Actual Weight:</div><div class="value"><span id="sumKg">0.00</span> kg</div></div>
           <div class="est"><div class="muted">Air Chargeable (volumetric ÷ 6000):</div><div class="value"><span id="sumVolKg">0.00</span> kg</div></div>
           <div style="text-align:right;margin-top:10px;">
-            <button id="waQuote" class="btn btn-primary">Send WhatsApp Quote</button>
+            <!-- No WA send; reuse to open Assist modal -->
+            <button id="waQuote" class="btn btn-primary">Send Quote</button>
           </div>
         </div>
 
@@ -242,8 +243,8 @@
         </div>
         <div class="center" style="margin-top:18px;">
           <button id="openShoppingForm" class="btn btn-primary">Request Assist Shopping</button>
-          <!-- New: Ask on WhatsApp inside Assist tab -->
-          <a id="assistWA" class="btn btn-ghost" style="margin-left:8px;background:#25d366;color:#0b2c0b;">Ask on WhatsApp</a>
+          <!-- Kept for UI, no link/number -->
+          <button id="assistWA" class="btn btn-ghost" style="margin-left:8px;background:#25d366;color:#0b2c0b;">WhatsApp — Ask us</button>
         </div>
       </div>
 
@@ -276,7 +277,10 @@
             <div><label>High value (&gt; MYR 2500)?</label><select id="w4"><option>No</option><option>Yes</option></select></div>
           </div>
           <div class="est"><div class="muted">Result:</div><div id="wizOut" class="value">Looks OK — proceed to quote.</div></div>
-          <div style="text-align:right;margin-top:10px;"><a id="wizWA" class="btn btn-primary" href="#">Ask on WhatsApp</a></div>
+          <div style="text-align:right;margin-top:10px;">
+            <!-- No link; opens Assist modal -->
+            <button id="wizWA" class="btn btn-primary">Ask (via Assist Form)</button>
+          </div>
         </div>
       </div>
 
@@ -316,18 +320,18 @@
   </div>
 </footer>
 
-<!-- Mini quote -->
+<!-- Mini quote (kept for UX; no WA) -->
 <div id="miniQuote" class="mini-quote" style="display:none">
   <div class="vals">
     <span>✈️ <span id="miniAir">USD 0.00</span></span>
     <span>🚢 <span id="miniSea">USD 0.00</span></span>
   </div>
-  <button id="miniWA" class="btn btn-primary">Send WhatsApp</button>
+  <button id="miniWA" class="btn btn-primary">Open Assist Form</button>
 </div>
 
-<!-- Floating Actions: WhatsApp + Assist -->
+<!-- Floating Actions -->
 <div class="fab-wrap">
-  <a id="fabWA" class="fab fab-wa">💬 WhatsApp — Ask us</a>
+  <button id="fabWA" class="fab fab-wa">💬 WhatsApp — Ask us</button>
   <button id="fabAssist" class="fab fab-assist">🛒 Assist Shopping</button>
 </div>
 
@@ -342,7 +346,7 @@
       <!-- Native form -->
       <form id="assistForm" class="grid" style="grid-template-columns:1fr 1fr;gap:12px;">
         <div><label>Your Name</label><input id="fName" type="text" required placeholder="Full name"></div>
-        <div><label>WhatsApp / Phone</label><input id="fPhone" type="tel" required placeholder="+60"></div>
+        <div><label>WhatsApp / Phone</label><input id="fPhone" type="tel" required placeholder="+60 ..."></div>
         <div class="grid" style="grid-column:1/-1;grid-template-columns:1fr 1fr;gap:12px;">
           <div><label>Email</label><input id="fEmail" type="email" required placeholder="you@example.com"></div>
           <div>
@@ -384,7 +388,7 @@
   </div>
 </div>
 
-<!-- Auth modal (optional; kept for future) -->
+<!-- Auth modal (optional) -->
 <div id="authModal" class="modal-backdrop">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
     <header>
@@ -414,10 +418,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
 <script>
-// === CONFIG ===
-const WHATSAPP_NUMBER = '601122667788'; // Random MY number format; replace with your real WA number
-const TAWK_PROPERTY_ID = '64b3f1b4cc26a871b028b123'; // Sample property ID; replace with your Tawk.to ID
-
 // Helpers
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 function num(v){const n=parseFloat(v);return isNaN(n)?0:n;}
@@ -431,7 +431,7 @@ setInterval(tickCut,1000);tickCut();
 /* Tabs click */
 (function(){const buttons=$$('#tabButtons a');const ids=['rates','converters','shops','assist','services','prohibited','gform'];const tabs=ids.map(id=>document.getElementById(id));buttons.forEach(btn=>{btn.addEventListener('click',e=>{if(!btn.dataset.tab)return;e.preventDefault();buttons.forEach(b=>b.classList.remove('active'));btn.classList.add('active');tabs.forEach(t=>t.classList.remove('active'));document.getElementById(btn.dataset.tab).classList.add('active');document.getElementById(btn.dataset.tab).scrollIntoView({behavior:'smooth',block:'start'});if(btn.dataset.tab==='gform'){dataLayer.push({event:'quote_opened'});}});});})();
 
-/* Air & Sea single calculators */
+/* Air & Sea calc */
 function calcAir(){const airKg=num($('#airKg').value),airBase=num($('#airBase').value),airPerKg=num($('#airPerKg').value);const est=Math.max(0,airBase+airPerKg*airKg);$('#airOut').textContent='USD '+est.toFixed(2);$('#miniAir').textContent='USD '+est.toFixed(2);}
 ['#airKg','#airBase','#airPerKg'].forEach(s=>$(s).addEventListener('input',calcAir));calcAir();
 function calcSea(){const L=num($('#len').value),W=num($('#wid').value),H=num($('#hei').value),rate=num($('#rateM3').value);const m3=Math.max(0,(L*W*H)/1_000_000);const est=Math.max(0,rate*m3);$('#m3Out').textContent=m3.toFixed(3);$('#seaOut').textContent='USD '+est.toFixed(2);$('#miniSea').textContent='USD '+est.toFixed(2);}
@@ -446,27 +446,6 @@ const tbody=document.querySelector('#boxes tbody');
 function row(q=1,l=40,w=30,h=30,kg=5){const tr=document.createElement('tr');tr.innerHTML=`<td><input type="number" min="1" value="${q}" style="width:70px"></td><td><input type="number" min="0" value="${l}" style="width:90px"></td><td><input type="number" min="0" value="${w}" style="width:90px"></td><td><input type="number" min="0" value="${h}" style="width:90px"></td><td><input type="number" min="0" value="${kg}" style="width:100px"></td><td><button class="btn btn-ghost">🗑</button></td>`;tbody.appendChild(tr);tr.querySelector('button').onclick=()=>{tr.remove();recalc();};tr.querySelectorAll('input').forEach(i=>i.oninput=recalc);}
 function recalc(){let m3=0,kg=0,volKg=0;[...tbody.querySelectorAll('tr')].forEach(tr=>{const [q,l,w,h,wkg]=[...tr.querySelectorAll('input')].map(i=>parseFloat(i.value)||0);const cbm=(l*w*h/1_000_000)*q;m3+=cbm;kg+=wkg*q;volKg+=((l*w*h)/6000)*q;});$('#sumM3').textContent=m3.toFixed(3);$('#sumKg').textContent=kg.toFixed(2);$('#sumVolKg').textContent=volKg.toFixed(2);}
 $('#addBox').onclick=()=>{row();recalc();};row();recalc();
-
-/* WhatsApp helpers */
-function waLink(msg){
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-}
-function composeQuoteText(){
-  return `Hi MyFoshi, can I get a quote?
-Boxes CBM: ${$('#sumM3')?.textContent || '0'} m³
-Actual weight: ${$('#sumKg')?.textContent || '0'} kg
-Air volumetric: ${$('#sumVolKg')?.textContent || '0'} kg
-Links:
-${$('#fLinks')?.value || '-'}
-`;
-}
-$('#waQuote').onclick=()=>{ dataLayer.push({event:'wa_click'}); location.href = waLink(composeQuoteText()); };
-$('#miniWA').onclick=()=>{ dataLayer.push({event:'wa_click'}); location.href = waLink(composeQuoteText()); };
-$('#assistWA').onclick=()=>{ dataLayer.push({event:'wa_click'}); location.href = waLink('Hello! I need help with Assist Shopping.'); };
-$('#heroWA').onclick=()=>{ dataLayer.push({event:'wa_click'}); location.href = waLink('Hello! I have a question about shipping from Malaysia to Maldives.'); };
-$('#fabWA').onclick=()=>{ dataLayer.push({event:'wa_click'}); location.href = waLink('Hello! I would like to chat.'); };
-/* Wizard WA */
-$('#wizWA').setAttribute('href', waLink('Can I ship this item? [photos/description attached]'));
 
 /* Converters */
 function recalcConv(){const L=num($('#cL').value),W=num($('#cW').value),H=num($('#cH').value);const m3=(L*W*H)/1_000_000;$('#cM3').textContent=m3.toFixed(3);const vol=(L*W*H)/6000;$('#cVolKG').value=vol.toFixed(2);}
@@ -496,13 +475,19 @@ async function emailSignUp(){const email=$('#authEmail').value.trim();const pass
 $('#emailSignInBtn').addEventListener('click',emailSignIn);$('#emailSignUpBtn').addEventListener('click',emailSignUp);
 auth.onAuthStateChanged(user=>{openAuthBtn.textContent=user?(user.displayName?`Hi, ${user.displayName.split(' ')[0]}`:'Account'):'Sign in';});
 
-/* Assist modal — now opens directly (no sign-in gate) */
+/* Assist modal (opens directly) */
 const modal=$('#shoppingModal'),openAssistBtn=$('#openShoppingForm'),closeAssistBtn=$('#closeShoppingForm');
 function openAssist(){ dataLayer.push({event:'assist_opened'}); modal.classList.add('show'); }
 openAssistBtn.addEventListener('click', openAssist);
 $('#fabAssist').addEventListener('click', openAssist);
 closeAssistBtn.addEventListener('click',()=> modal.classList.remove('show'));
 modal.addEventListener('click',e=>{ if(e.target===modal) modal.classList.remove('show'); });
+
+/* Rewire all “WhatsApp — Ask us” buttons to open Assist (no number/links) */
+['#heroWA','#assistWA','#fabWA','#miniWA','#waQuote','#wizWA'].forEach(sel=>{
+  const el=$(sel); if(!el) return;
+  el.addEventListener('click', (e)=>{ e.preventDefault?.(); openAssist(); });
+});
 
 /* Assist form submit */
 $('#assistForm').addEventListener('submit',e=>{
@@ -540,8 +525,9 @@ $('#trkBtn').onclick=()=>{const id=($('#trkId').value||'').trim();if(!id){alert(
 /* GA/GTM hooks */
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)};dataLayer.push({event:'calc_use'});
 
-/* ===== Tawk.to live chat (plug-and-play) ===== */
+/* Tawk.to live chat (sample ID – replace with your own) */
 (function(){
+  var TAWK_PROPERTY_ID='64b3f1b4cc26a871b028b123'; // replace with your actual Tawk.to property ID
   if(!TAWK_PROPERTY_ID) return;
   var s1=document.createElement("script"), s0=document.getElementsByTagName("script")[0];
   s1.async=true;
@@ -553,4 +539,3 @@ window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
 
 </body>
 </html>
-
