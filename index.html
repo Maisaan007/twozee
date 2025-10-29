@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MyFoshi – Malaysia → Maldives</title>
+<style>
+  :root{
+    --navy:#0B2C4A;--cyan:#0FB9D7;--gold:#F6C343;
+    --bg:#f6f7fb;--text:#0f172a;--muted:#64748b;--card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
+  h1,h2,h3{margin:0 0 .5rem}
+  a{text-decoration:none;color:inherit}
+  .container{max-width:1200px;margin:0 auto;padding:0 18px}
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;gap:.5rem;border:0;border-radius:12px;padding:12px 18px;font-weight:700;cursor:pointer;transition:.2s}
+  .btn-primary{background:var(--gold);color:#111}
+  .btn-primary:hover{filter:brightness(1.05);transform:translateY(-1px)}
+  .btn-outline{background:transparent;color:#fff;border:2px solid #fff}
+  .btn-outline:hover{background:#fff;color:var(--navy)}
+  .btn-ghost{background:#fff;border:1px solid #e5e7eb}
+  .badge{display:inline-block;background:#fff3cd;color:#7c5a00;border:1px solid #ffe69c;border-radius:10px;padding:4px 8px;font-size:.75rem}
+  /* Hero */
+  .hero{padding:80px 0;background:linear-gradient(90deg,var(--navy),var(--cyan));color:#fff;text-align:center}
+  .hero .buttons{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px}
+  /* Sections */
+  .section{padding:60px 0}
+  .center{text-align:center}
+  .muted{color:var(--muted)}
+  /* Cards & grids */
+  .grid{display:grid;gap:18px}
+  .cards{grid-template-columns:repeat(4,minmax(0,1fr))}
+  @media (max-width:1000px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:600px){.cards{grid-template-columns:1fr}}
+  .card{background:var(--card);border-radius:18px;box-shadow:0 8px 24px rgba(11,44,74,.08);padding:22px}
+  .card:hover{box-shadow:0 16px 36px rgba(11,44,74,.15);transform:translateY(-3px)}
+  .row{display:grid;gap:18px;grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media (max-width:900px){.row{grid-template-columns:1fr}}
+  .tight{margin-top:6px}
+  input,select,textarea{width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:12px}
+  label{font-size:.9rem;color:var(--muted)}
+  .est{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+  .est .value{font-size:1.4rem;font-weight:800}
+  /* Tabs */
+  .tabs{margin-top:10px}
+  .tab-buttons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:24px}
+  .tab-buttons button{border:1px solid #dbe3ea;background:#fff;color:#334155;padding:10px 14px;border-radius:999px;font-weight:600;cursor:pointer}
+  .tab-buttons button.active{background:var(--cyan);border-color:var(--cyan);color:#fff}
+  .tab{display:none}
+  .tab.active{display:block}
+  .split-3{display:grid;gap:18px;grid-template-columns:repeat(3,minmax(0,1fr))}
+  @media (max-width:1000px){.split-3{grid-template-columns:1fr}}
+  iframe{border:0;border-radius:16px}
+  /* CTA & footer */
+  .cta{background:var(--navy);color:#fff;padding:60px 0;text-align:center}
+  .footer{background:#0b1220;color:#cbd5e1;text-align:center;padding:26px 12px;font-size:.9rem}
+  /* Modal */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+  .modal{width:min(800px,100%);background:#fff;border-radius:16px;box-shadow:0 25px 60px rgba(0,0,0,.25);overflow:hidden}
+  .modal header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#f8fafc;border-bottom:1px solid #e5e7eb}
+  .modal .content{padding:16px}
+  .modal.show{display:flex}
+  /* Shops grid */
+  .shop-grid{display:grid;gap:16px;grid-template-columns:repeat(4,minmax(0,1fr))}
+  @media (max-width:1100px){.shop-grid{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:800px){.shop-grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:540px){.shop-grid{grid-template-columns:1fr}}
+  .shop-card{display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid #eef2f7;border-radius:16px;background:#fff}
+  .shop-card .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .shop-card .btn{padding:8px 12px;border-radius:10px}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <h1 style="font-size:clamp(28px,5vw,54px);font-weight:900;">Ship from Malaysia to Maldives</h1>
+    <p class="muted" style="color:#e6f3ff">Weekly Air Freight • Bi-Weekly Sea Freight • Door-to-Door Delivery</p>
+    <div class="buttons">
+      <a href="#tabs" class="btn btn-primary">Get Quote</a>
+      <a href="#track" class="btn btn-outline">Track Parcel</a>
+    </div>
+  </div>
+</header>
+
+<!-- TABS -->
+<section id="tabs" class="section" style="padding-top:30px;">
+  <div class="container">
+    <div class="tabs">
+      <div class="tab-buttons" id="tabButtons">
+        <button data-tab="rates" class="active">Rates</button>
+        <button data-tab="services">Services</button>
+        <button data-tab="shops">Shops</button>
+        <button data-tab="assist">Online Assist Shopping</button>
+      </div>
+
+      <!-- RATES TAB -->
+      <div id="rates" class="tab active">
+        <h2 class="center" style="font-size:1.8rem;margin-bottom:18px;">Rate Calculator</h2>
+        <div class="row">
+          <!-- Air -->
+          <div class="card">
+            <h3>✈️ Air Freight (by weight)</h3>
+            <div class="grid" style="grid-template-columns:repeat(2,1fr);margin-top:10px;">
+              <div><label>Weight (kg)</label><input id="airKg" type="number" min="0" value="5"></div>
+              <div><label>Base fee (USD)</label><input id="airBase" type="number" min="0" value="10"></div>
+              <div><label>Rate per kg (USD)</label><input id="airPerKg" type="number" min="0" step="0.1" value="6.5"></div>
+            </div>
+            <div class="est"><div class="muted">Estimate:</div><div id="airOut" class="value">USD 42.50</div></div>
+          </div>
+
+          <!-- Sea -->
+          <div class="card">
+            <h3>🚢 Sea Freight (by volume)</h3>
+            <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:10px;">
+              <div><label>Length (cm)</label><input id="len" type="number" min="0" value="50"></div>
+              <div><label>Width (cm)</label><input id="wid" type="number" min="0" value="40"></div>
+              <div><label>Height (cm)</label><input id="hei" type="number" min="0" value="30"></div>
+            </div>
+            <div class="grid" style="grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px;">
+              <div><label>Rate per m³ (USD)</label><input id="rateM3" type="number" min="0" value="495"></div>
+              <div style="display:flex;align-items:flex-end;"><div class="badge">Volume: <b id="m3Out">0.060</b> m³</div></div>
+            </div>
+            <div class="est"><div class="muted">Estimate:</div><div id="seaOut" class="value">USD 29.70</div></div>
+            <button id="reset" class="btn btn-ghost" style="margin-top:10px;">↻ Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVICES TAB -->
+      <div id="services" class="tab">
+        <h2 class="center" style="font-size:1.8rem;margin-bottom:18px;">Freight & Handling Services</h2>
+        <div class="split-3">
+          <div class="card"><h3>🏬 Warehouse Storage</h3><p class="muted">Short-term holding while we consolidate. Photo updates on request.</p></div>
+          <div class="card"><h3>🧾 Customs Handling</h3><p class="muted">Documentation & Maldives customs clearance. Duties/taxes per regulation.</p></div>
+          <div class="card"><h3>🚚 Final-mile Delivery</h3><p class="muted">Delivery to Malé/Hulhumalé and jetty drop-off for atolls.</p></div>
+        </div>
+      </div>
+
+      <!-- SHOPS TAB -->
+      <div id="shops" class="tab">
+        <h2 class="center" style="font-size:1.8rem;margin-bottom:18px;">Popular Shops</h2>
+        <div style="max-width:640px;margin:0 auto 16px;">
+          <input id="shopSearch" type="search" placeholder="Search shops (e.g., Ikea, Jaya Grocer, 99 Speedmart)"/>
+        </div>
+        <div id="shopGrid" class="shop-grid">
+          <!-- cards injected by JS for easy search/filter -->
+        </div>
+        <p class="center muted tight">Tip: Click “Add to Request” to send a shop link into the Assist Shopping form automatically.</p>
+      </div>
+
+      <!-- ONLINE ASSIST SHOPPING TAB -->
+      <div id="assist" class="tab">
+        <h2 class="center" style="font-size:1.8rem;margin-bottom:18px;">Online Assist Shopping</h2>
+        <div class="split-3">
+          <div class="card"><h3>🛍️ Personal Shopper</h3><p class="muted">Send links (Shopee, Lazada, Ikea, etc.). We purchase, receive, and consolidate for you.</p></div>
+          <div class="card"><h3>🧰 Packaging & Wrapping</h3><p class="muted">Bubble wrap, double-wall cartons, and tape for safety.</p></div>
+          <div class="card"><h3>💳 Transparent Pricing</h3><p class="muted">Fee: <b>5%</b> of item value or min <b>MYR 10</b> + domestic shipping to our warehouse (if any).</p></div>
+        </div>
+        <div class="center" style="margin-top:18px;">
+          <button id="openShoppingForm" class="btn btn-primary">Request Assist Shopping</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / TRACK -->
+<section id="track" class="cta">
+  <div class="container">
+    <h2 style="font-size:2rem;margin-bottom:6px;">Track Your Shipment</h2>
+    <p class="muted" style="color:#dbeafe;margin-bottom:14px;">Click below to track your parcel in real time.</p>
+    <a href="https://example.com/track" class="btn btn-primary">Go to Tracking Page</a>
+  </div>
+</section>
+
+<footer class="footer">
+  © 2025 MyFoshi Sdn. Bhd. · Malaysia ⇄ Maldives Logistics Partner
+</footer>
+
+<!-- ASSIST SHOPPING MODAL -->
+<div id="shoppingModal" class="modal-backdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shoppingTitle">
+    <header>
+      <h3 id="shoppingTitle">Assist Shopping Request</h3>
+      <button id="closeShoppingForm" class="btn btn-ghost">✕</button>
+    </header>
+    <div class="content">
+      <!-- Native form (keep) -->
+      <form id="assistForm" class="grid" style="grid-template-columns:1fr 1fr;gap:12px;">
+        <div><label>Your Name</label><input id="fName" type="text" required placeholder="Full name"></div>
+        <div><label>WhatsApp / Phone</label><input id="fPhone" type="tel" required placeholder="+60 ..."></div>
+        <div class="grid" style="grid-column:1/-1;grid-template-columns:1fr 1fr;gap:12px;">
+          <div><label>Email</label><input id="fEmail" type="email" required placeholder="you@example.com"></div>
+          <div>
+            <label>Preferred Contact</label>
+            <select id="fPref"><option>WhatsApp</option><option>Email</option><option>Phone Call</option></select>
+          </div>
+        </div>
+        <div style="grid-column:1/-1">
+          <label>Product Links (one per line)</label>
+          <textarea id="fLinks" rows="4" placeholder="https://shopee...&#10;https://lazada..."></textarea>
+        </div>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;grid-column:1/-1;">
+          <div><label>Budget (MYR)</label><input id="fBudget" type="number" min="0" placeholder="e.g., 350"></div>
+          <div><label>Urgency</label>
+            <select id="fUrgency"><option>Standard (3–7 days)</option><option>Urgent (1–2 days)</option></select>
+          </div>
+        </div>
+        <div style="grid-column:1/-1;text-align:right;margin-top:6px;">
+          <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+      </form>
+
+      <p class="muted center" style="margin:10px 0">— or —</p>
+
+      <!-- Optional: replace this with your Google Form embed -->
+      <div class="card" style="padding:10px;">
+        <iframe
+          title="Assist Shopping Google Form"
+          src="https://docs.google.com/forms/d/e/1FAIpQLSe_example/viewform?embedded=true"
+          width="100%" height="520">Loading…</iframe>
+      </div>
+      <p class="muted" style="font-size:.8rem;margin-top:6px;">Replace the iframe URL with your own Google Form (Send → Embed &lt;&gt;). Remove the native form above if you only want Google Form.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== Helpers ===== */
+const $ = sel => document.querySelector(sel);
+function num(v){ const n=parseFloat(v); return isNaN(n)?0:n; }
+
+/* ===== Tabs ===== */
+(function(){
+  const buttons=document.querySelectorAll('#tabButtons button');
+  const tabIds=['rates','services','shops','assist'];
+  const tabs=tabIds.map(id=>document.getElementById(id));
+  buttons.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      buttons.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      tabs.forEach(t=>t.classList.remove('active'));
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      document.getElementById(btn.dataset.tab).scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+})();
+
+/* ===== Rates: Air & Sea Calculators ===== */
+function calcAir(){
+  const airKg=num($('#airKg').value);
+  const airBase=num($('#airBase').value);
+  const airPerKg=num($('#airPerKg').value);
+  const est = Math.max(0, airBase + airPerKg*airKg);
+  $('#airOut').textContent = 'USD ' + est.toFixed(2);
+}
+['#airKg','#airBase','#airPerKg'].forEach(s=>$(s).addEventListener('input',calcAir)); calcAir();
+
+function calcSea(){
+  const L=num($('#len').value), W=num($('#wid').value), H=num($('#hei').value);
+  const rate=num($('#rateM3').value);
+  const m3 = Math.max(0,(L*W*H)/1_000_000);
+  const est = Math.max(0, rate * m3);
+  $('#m3Out').textContent = m3.toFixed(3);
+  $('#seaOut').textContent = 'USD ' + est.toFixed(2);
+}
+['#len','#wid','#hei','#rateM3'].forEach(s=>$(s).addEventListener('input',calcSea));
+$('#reset').addEventListener('click',()=>{ $('#len').value=50; $('#wid').value=40; $('#hei').value=30; $('#rateM3').value=495; calcSea();});
+calcSea();
+
+/* ===== Shops data + filter + add-to-request ===== */
+const shops = [
+  {name:'Shopee', url:'https://shopee.com.my/'},
+  {name:'Lazada', url:'https://www.lazada.com.my/'},
+  {name:'Ikea Malaysia', url:'https://www.ikea.com/my/en/'},
+  {name:'Jaya Grocer', url:'https://jayagrocer.com/'},
+  {name:'Lotus’s', url:'https://www.lotuss.com.my/'},
+  {name:'Village Grocer', url:'https://villagegrocer.com.my/'},
+  {name:'AEON', url:'https://www.aeonretail.com.my/'},
+  {name:'99 Speedmart', url:'https://www.99speedmart.com.my/'},
+  {name:'KK MART', url:'https://www.kkmarts.com/'},
+  {name:'Mydin', url:'https://www.mydin.com.my/'},
+  {name:'Decathlon MY', url:'https://www.decathlon.my/'},
+  {name:'MR.DIY', url:'https://www.mrdiy.com/my/'},
+];
+
+function renderShops(list){
+  const grid = $('#shopGrid'); grid.innerHTML='';
+  list.forEach(s=>{
+    const card = document.createElement('div');
+    card.className='shop-card';
+    card.innerHTML = `
+      <div style="font-weight:800">${s.name}</div>
+      <div class="muted" style="word-break:break-all;font-size:.9rem;">${s.url}</div>
+      <div class="actions">
+        <a class="btn btn-ghost" href="${s.url}" target="_blank" rel="noopener">Open</a>
+        <button class="btn btn-primary" data-add="${s.url}">Add to Request</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+  // bind add handlers
+  grid.querySelectorAll('button[data-add]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const url = btn.getAttribute('data-add');
+      const ta = $('#fLinks');
+      ta.value = (ta.value ? ta.value + '\n' : '') + url;
+      // show toast-ish
+      btn.textContent='Added ✓';
+      setTimeout(()=>btn.textContent='Add to Request',900);
+    });
+  });
+}
+
+renderShops(shops);
+
+$('#shopSearch').addEventListener('input',e=>{
+  const q = e.target.value.trim().toLowerCase();
+  renderShops(shops.filter(s => s.name.toLowerCase().includes(q) || s.url.toLowerCase().includes(q)));
+});
+
+/* ===== Modal (Assist Shopping) ===== */
+const modal = $('#shoppingModal');
+$('#openShoppingForm').addEventListener('click',()=> modal.classList.add('show'));
+$('#closeShoppingForm').addEventListener('click',()=> modal.classList.remove('show'));
+modal.addEventListener('click',e=>{ if(e.target===modal) modal.classList.remove('show'); });
+
+// Simple submit handler (replace with webhook/EmailJS/etc.)
+$('#assistForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  alert('Thank you! Your Assist Shopping request has been received.');
+  modal.classList.remove('show');
+  // Optional: clear fields
+  ['#fName','#fPhone','#fEmail','#fLinks','#fBudget'].forEach(id=>$(id).value='');
+  $('#fPref').selectedIndex=0; $('#fUrgency').selectedIndex=0;
+});
+</script>
+</body>
+</html>
